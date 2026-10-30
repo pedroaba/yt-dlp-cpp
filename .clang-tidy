@@ -1,0 +1,12 @@
+Checks: >-
+  -*,
+  clang-analyzer-*,
+  bugprone-*,
+  performance-*,
+  modernize-use-nullptr,
+  modernize-use-override,
+  readability-braces-around-statements,
+  readability-redundant-control-flow
+WarningsAsErrors: '*'
+HeaderFilterRegex: '.*(include/ytdl|src|apps)/.*'
+FormatStyle: file

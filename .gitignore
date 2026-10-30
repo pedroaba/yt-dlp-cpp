@@ -1,0 +1,39 @@
+# Build directories and generated CMake/Ninja files
+/build/
+/build-*/
+/cmake-build-*/
+/out/
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+/install_manifest.txt
+/build.ninja
+/.ninja_deps
+/.ninja_log
+
+# Local CMake presets and compilation database
+/CMakeUserPresets.json
+/compile_commands.json
+
+# Compiled libraries, executables and debug symbols
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.pdb
+*.ilk
+*.dSYM/
+
+# Local caches, editor settings and temporary files
+/.cache/
+/.idea/
+/.vscode/
+.DS_Store
+*.user
+*.swp
+*.swo
