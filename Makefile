@@ -29,14 +29,14 @@ build: configure
 debug: build
 
 run: build
-	./build/debug/apps/cli/ytdl $(ARGS)
+	./build/debug/ytdl $(ARGS)
 
 release:
 	$(CMAKE) --preset release $(CMAKE_ARGS)
 	$(CMAKE) --build --preset release
 
 run-release: release
-	./build/release/apps/cli/ytdl $(ARGS)
+	./build/release/ytdl $(ARGS)
 
 format: configure
 	$(CMAKE) --build --preset format

@@ -6,10 +6,11 @@ Por enquanto, o único comportamento é imprimir `Hello, world!`.
 ## Estrutura
 
 ```text
-apps/cli/           Executável de demonstração
-include/ytdl/core/  API pública da biblioteca
-src/core/          Implementação do núcleo
-cmake/             Opções de compilação e ferramentas de qualidade
+include/ytdl/      Headers públicos da biblioteca (greeting.hpp)
+src/               Implementação da biblioteca (greeting.cpp) e CLI (main.cpp)
+CMakeLists.txt     Alvos, lista de fontes e ferramentas de qualidade
+Makefile           Atalhos para compilar, executar e verificar
+CMakePresets.json  Presets Debug e Release
 .github/workflows/ Compilação e verificações no GitHub Actions
 ```
 
@@ -71,11 +72,11 @@ Execute os comandos a partir da raiz do projeto:
 ```sh
 cmake --preset debug
 cmake --build --preset debug
-./build/debug/apps/cli/ytdl
+./build/debug/ytdl
 ```
 
 No Windows, use um terminal de desenvolvimento do Visual Studio com Ninja
-disponível e execute `build/debug/apps/cli/ytdl.exe`.
+disponível e execute `build/debug/ytdl.exe`.
 
 Para uma compilação otimizada:
 
@@ -98,8 +99,15 @@ cmake --build --preset lint          # Executa clang-tidy
 ```
 
 Esses alvos ficam disponíveis quando as respectivas ferramentas são encontradas.
-O build comum não exige LLVM instalado. Ao adicionar arquivos C++, registre-os
-nos alvos CMake correspondentes e nas listas de `cmake/CodeQuality.cmake`.
+O build comum não exige LLVM instalado. Ao adicionar arquivos `.cpp` à biblioteca,
+registre-os em `YTDL_SOURCES` no `CMakeLists.txt` da raiz. Headers públicos entram
+em `YTDL_HEADERS`. Os linters reutilizam essas listas, sem cadastro duplicado.
+Headers internos podem ficar junto da implementação em `src/`; registre-os em
+`YTDL_HEADERS` apenas se também quiser incluí-los na formatação, sem movê-los
+para `include/`.
+
+Por exemplo, uma implementação interna em `src/protocols/http.cpp` entra em
+`YTDL_SOURCES`. A pasta não precisa ter seu próprio `CMakeLists.txt`.
 
 O arquivo `build/debug/compile_commands.json` é gerado para ferramentas como
 clangd; `.clangd` já aponta para essa pasta. `.editorconfig` define as convenções

@@ -28,13 +28,13 @@ jobs:
         if: runner.os != 'Windows'
         shell: bash
         run: |
-          output="$(./build/release/apps/cli/ytdl)"
+          output="$(./build/release/ytdl)"
           test "$output" = 'Hello, world!'
       - name: Run Hello World (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $output = & ./build/release/apps/cli/ytdl.exe
+          $output = & ./build/release/ytdl.exe
           if ($LASTEXITCODE -ne 0 -or $output -ne 'Hello, world!') {
             throw 'Hello World verification failed'
           }

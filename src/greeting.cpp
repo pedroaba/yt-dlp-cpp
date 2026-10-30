@@ -1,4 +1,4 @@
-#include "ytdl/core/greeting.hpp"
+#include "ytdl/greeting.hpp"
 
 namespace ytdl {
 

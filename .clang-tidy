@@ -8,5 +8,5 @@ Checks: >-
   readability-braces-around-statements,
   readability-redundant-control-flow
 WarningsAsErrors: '*'
-HeaderFilterRegex: '.*(include/ytdl|src|apps)/.*'
+HeaderFilterRegex: '.*(include/ytdl|src)/.*'
 FormatStyle: file
