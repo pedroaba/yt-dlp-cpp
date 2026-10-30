@@ -1,7 +1,42 @@
-# ytdl — C++
+# yt-dlp-cpp
 
-Base inicial em C++20 para um motor compartilhado entre desktop e mobile.
-Por enquanto, o único comportamento é imprimir `Hello, world!`.
+Projeto experimental para portar progressivamente o [yt-dlp](https://github.com/yt-dlp/yt-dlp)
+para C++20, construindo uma biblioteca que possa ser integrada a aplicações desktop
+e mobile.
+
+## Intuito do projeto
+
+O objetivo é disponibilizar as funcionalidades de extração de informações e download
+de mídia do yt-dlp em um núcleo C++ reutilizável. A intenção é facilitar a integração
+com outras linguagens de sistemas, como Rust, e com as APIs nativas do Android e iOS,
+sem exigir um interpretador Python embarcado para executar o futuro núcleo portado.
+
+O núcleo será independente das interfaces dos aplicativos. As integrações planejadas
+incluem uma API C para interoperabilidade com Rust, JNI para Kotlin/Java no Android
+e uma ponte nativa para Swift no iOS. Isso também permitirá explorar o uso em
+aplicações Tauri e módulos nativos para Expo/React Native.
+
+A portabilidade será construída e validada gradualmente. O processamento de mídia
+e outras funcionalidades poderão exigir dependências adicionais conforme forem
+implementados; a escolha de C++ não elimina essas necessidades.
+
+## Estado atual
+
+O projeto está na fase inicial de configuração. Atualmente há uma biblioteca estática
+e uma CLI que imprime apenas `Hello, world!`, além das ferramentas de compilação,
+formatação e análise estática.
+
+Ainda não há extração de informações, downloads, API C, bindings Rust, pontes JNI/Swift
+ou suporte validado a Android/iOS. Este repositório ainda não substitui o yt-dlp.
+
+## Próximos passos
+
+- Implementar a consulta de informações de uma URL para um primeiro site.
+- Adicionar seleção de formatos e download básico.
+- Expor progresso e cancelamento de downloads.
+- Criar uma API de interoperabilidade e validar o consumo por Rust.
+- Configurar builds e integrações nativas para Android e iOS.
+- Ampliar gradualmente a cobertura de sites e funcionalidades.
 
 ## Estrutura
 
@@ -116,3 +151,15 @@ básicas de edição e `.clang-format` define o estilo C++.
 O GitHub Actions está configurado para compilar e verificar a saída do Hello World
 em Linux, macOS e Windows, além de executar formatação e análise estática em Linux.
 As compilações Android/iOS serão configuradas junto às respectivas integrações.
+
+## Referência e licença
+
+O [yt-dlp](https://github.com/yt-dlp/yt-dlp) é o projeto de referência para este port.
+Esta é uma iniciativa independente, sem vínculo oficial com seus mantenedores.
+O código C++ atual contém somente o exemplo inicial; nenhum extrator foi portado ainda.
+
+O código original deste repositório é distribuído sob a [licença MIT](LICENSE).
+O código de referência do yt-dlp é distribuído sob a
+[Unlicense](https://github.com/yt-dlp/yt-dlp/blob/master/LICENSE).
+Código de terceiros incorporado futuramente deverá manter os respectivos avisos
+e condições de licença.
