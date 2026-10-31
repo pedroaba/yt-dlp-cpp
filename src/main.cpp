@@ -25,7 +25,8 @@ int main(int argc, char *argv[]) {
 
     std::cout << "HTTP: " << static_cast<long>(response.StatusCode) << '\n';
 
-    std::cout << "Bytes recebidos: " << response.body.size() << '\n';
+    std::cout << "Bytes recebidos: " << response.Body.size() << '\n';
+    std::cout << "URL final: " << response.EffectiveUrl << '\n';
   } catch (const std::exception &error) {
     std::cerr << "Falha na requisição: " << error.what() << '\n';
     return 1;

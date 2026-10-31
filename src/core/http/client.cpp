@@ -1,4 +1,5 @@
 #include "vidx/core/http/client.hpp"
+#include "vidx/core/constants/http_flags.hpp"
 #include "vidx/core/http/response.hpp"
 #include "vidx/core/validator/url.hpp"
 
@@ -60,12 +61,26 @@ HttpResponse HttpClient::Get(const std::string_view &url) const {
   const std::string address(url);
   HttpResponse response = HttpResponse{};
 
+  CheckCurl(curl_easy_setopt(handle.get(), CURLOPT_FOLLOWLOCATION,
+                             ENABLE_FOLLOW_REDIRECTS));
+  CheckCurl(
+      curl_easy_setopt(handle.get(), CURLOPT_MAXREDIRS, MAX_ALLOWED_REDIRECTS));
+
   CheckCurl(curl_easy_setopt(handle.get(), CURLOPT_URL, address.c_str()));
   CheckCurl(curl_easy_setopt(handle.get(), CURLOPT_WRITEFUNCTION, &WriteBody));
-  CheckCurl(curl_easy_setopt(handle.get(), CURLOPT_WRITEDATA, &response.body));
-  CheckCurl(curl_easy_setopt(handle.get(), CURLOPT_CONNECTTIMEOUT, 10L));
-  CheckCurl(curl_easy_setopt(handle.get(), CURLOPT_TIMEOUT, 30L));
+  CheckCurl(curl_easy_setopt(handle.get(), CURLOPT_WRITEDATA, &response.Body));
+  CheckCurl(curl_easy_setopt(handle.get(), CURLOPT_CONNECTTIMEOUT,
+                             MAX_CONNECTION_TIMEOUT));
+  CheckCurl(curl_easy_setopt(handle.get(), CURLOPT_TIMEOUT, MAX_TIMEOUT));
   CheckCurl(curl_easy_perform(handle.get()));
+
+  char *effectiveUrl = nullptr;
+  CheckCurl(
+      curl_easy_getinfo(handle.get(), CURLINFO_EFFECTIVE_URL, &effectiveUrl));
+
+  if (effectiveUrl != nullptr) {
+    response.EffectiveUrl = effectiveUrl;
+  }
 
   long statusCode{};
   CheckCurl(

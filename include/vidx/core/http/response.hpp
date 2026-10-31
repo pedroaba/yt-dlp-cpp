@@ -7,6 +7,7 @@ namespace vidx {
 struct HttpResponse {
   vidx::HttpStatusCode
       StatusCode{}; // Zero means no HTTP response received yet.
-  std::string body;
+  std::string Body;
+  std::string EffectiveUrl;
 };
 } // namespace vidx
