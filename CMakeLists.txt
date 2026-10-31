@@ -18,6 +18,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # ==========================================
 
 find_package(CURL 7.62 REQUIRED)
+find_package(LibXml2 REQUIRED)
 
 # ==========================================
 # Vidx Library
@@ -26,6 +27,7 @@ find_package(CURL 7.62 REQUIRED)
 add_library(vidx_core STATIC
     src/url.cpp
     src/core/http/client.cpp
+    src/core/extractor/html_title.cpp
 )
 
 add_library(vidx::core ALIAS vidx_core)
@@ -55,4 +57,9 @@ target_link_libraries(vidx_core PRIVATE
 
 target_link_libraries(vidx PRIVATE
     vidx::core
+)
+
+target_link_libraries(vidx_core PRIVATE
+    CURL::libcurl
+    LibXml2::LibXml2
 )

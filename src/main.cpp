@@ -1,3 +1,4 @@
+#include "vidx/core/extractor/html_title.hpp"
 #include "vidx/core/http/client.hpp"
 #include "vidx/core/validator/url.hpp"
 
@@ -22,11 +23,23 @@ int main(int argc, char *argv[]) {
 
   try {
     const auto response = client.Get(url);
+    const auto status = static_cast<long>(response.StatusCode);
 
     std::cout << "HTTP: " << static_cast<long>(response.StatusCode) << '\n';
 
-    std::cout << "Bytes recebidos: " << response.Body.size() << '\n';
-    std::cout << "URL final: " << response.EffectiveUrl << '\n';
+    if (status < 200 || status >= 300) {
+      std::cerr << "O servidor retornou HTTP " << status << '\n';
+      return 1;
+    }
+
+    const vidx::HtmlTitleExtractor extractor;
+    const auto title = extractor.Extract(response.Body);
+
+    if (title) {
+      std::cout << "Título: " << *title << '\n';
+    } else {
+      std::cout << "A página não possui um título disponível.\n";
+    }
   } catch (const std::exception &error) {
     std::cerr << "Falha na requisição: " << error.what() << '\n';
     return 1;
