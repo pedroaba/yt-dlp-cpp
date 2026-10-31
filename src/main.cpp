@@ -55,6 +55,34 @@ int main(int argc, char *argv[]) {
     } else {
       std::cout << "Duração indisponível\n";
     }
+
+    std::cout << "\nFormatos encontrados: " << video.Formats.size() << '\n';
+
+    for (const auto &format : video.Formats) {
+      std::cout << "itag=" << format.Itag << " | " << format.MimeType
+                << " | grupo="
+                << (format.IsAdaptive ? "adaptiveFormats" : "formats");
+
+      if (!format.QualityLabel.empty()) {
+        std::cout << " | " << format.QualityLabel;
+      }
+
+      if (format.Height) {
+        std::cout << " | altura=" << *format.Height;
+      }
+
+      if (format.Bitrate) {
+        std::cout << " | bitrate=" << *format.Bitrate << " bit/s";
+      }
+
+      std::cout << " | URL presente=" << (format.Url ? "sim" : "não")
+                << " | signatureCipher="
+                << (format.HasSignatureCipher ? "sim" : "não") << '\n';
+    }
+
+    if (video.Formats.empty()) {
+      std::cout << "Esta resposta do player não forneceu formatos listáveis.\n";
+    }
   } catch (const std::exception &error) {
     std::cerr << "Falha na requisição: " << error.what() << '\n';
     return 1;

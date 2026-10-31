@@ -1,4 +1,5 @@
 #include "vidx/core/extractor/video_info.hpp"
+#include "vidx/core/models/media_format.hpp"
 #include "vidx/core/models/video_info.hpp"
 
 #include <nlohmann/json.hpp>
@@ -10,6 +11,7 @@
 #include <string>
 #include <string_view>
 #include <system_error>
+#include <vector>
 
 namespace vidx {
 VideoInfo VideoInfoExtractor::Extract(std::string_view html) const {
@@ -57,6 +59,59 @@ VideoInfo VideoInfoExtractor::Extract(std::string_view html) const {
     }
 
     video.DurationSeconds = seconds;
+  }
+
+  const auto streaming = player.find("streamingData");
+  if (streaming != player.end() && streaming->is_object()) {
+    const auto appendFormats = [&](const char *groupName, bool adaptive) {
+      const auto group = streaming->find(groupName);
+
+      if (group == streaming->end() || !group->is_array()) {
+        return;
+      }
+
+      for (const auto &entry : *group) {
+        if (!entry.is_object()) {
+          continue;
+        }
+
+        MediaFormat format;
+        format.Itag = entry.at("itag").get<int>();
+        format.MimeType = entry.at("mimeType").get<std::string>();
+        format.IsAdaptive = adaptive;
+
+        if (entry.contains("qualityLabel") &&
+            !entry.at("qualityLabel").is_null()) {
+          format.QualityLabel = entry.at("qualityLabel").get<std::string>();
+        }
+
+        if (entry.contains("height") && !entry.at("height").is_null()) {
+          format.Height = entry.at("height").get<int>();
+        }
+
+        if (entry.contains("bitrate") && !entry.at("bitrate").is_null()) {
+          format.Bitrate = entry.at("bitrate").get<std::uint64_t>();
+        }
+
+        if (entry.contains("url") && !entry.at("url").is_null()) {
+          const auto url = entry.at("url").get<std::string>();
+
+          if (!url.empty()) {
+            format.Url = url;
+          }
+        }
+
+        format.HasSignatureCipher =
+            entry.contains("signatureCipher") &&
+            entry.at("signatureCipher").is_string() &&
+            !entry.at("signatureCipher").get_ref<const std::string &>().empty();
+
+        video.Formats.push_back(format);
+      }
+    };
+
+    appendFormats("formats", false);
+    appendFormats("adaptiveFormats", true);
   }
 
   return video;
