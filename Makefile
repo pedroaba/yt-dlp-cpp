@@ -21,31 +21,31 @@ help:
 	  'Opcoes: CMAKE_ARGS="-DOPCAO=VALOR" e ARGS="argumentos da CLI"'
 
 configure:
-	$(CMAKE) --preset debug $(CMAKE_ARGS)
+	$(CMAKE) -S . -B build/debug -DCMAKE_BUILD_TYPE=Debug $(CMAKE_ARGS)
 
 build: configure
-	$(CMAKE) --build --preset debug
+	$(CMAKE) --build build/debug --config Debug
 
 debug: build
 
 run: build
-	./build/debug/ytdl $(ARGS)
+	./build/debug/vidx $(ARGS)
 
 release:
-	$(CMAKE) --preset release $(CMAKE_ARGS)
-	$(CMAKE) --build --preset release
+	$(CMAKE) -S . -B build/release -DCMAKE_BUILD_TYPE=Release $(CMAKE_ARGS)
+	$(CMAKE) --build build/release --config Release
 
 run-release: release
-	./build/release/ytdl $(ARGS)
+	./build/release/vidx $(ARGS)
 
 format: configure
-	$(CMAKE) --build --preset format
+	$(CMAKE) --build build/debug --target format
 
 format-check: configure
-	$(CMAKE) --build --preset format-check
+	$(CMAKE) --build build/debug --target format-check
 
 lint: configure
-	$(CMAKE) --build --preset lint
+	$(CMAKE) --build build/debug --target lint
 
 check: build format-check lint
 

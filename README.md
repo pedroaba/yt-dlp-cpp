@@ -1,4 +1,4 @@
-# yt-dlp-cpp
+# vidx
 
 Projeto experimental para portar progressivamente o [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 para C++20, construindo uma biblioteca que possa ser integrada a aplicações desktop
@@ -41,7 +41,7 @@ ou suporte validado a Android/iOS. Este repositório ainda não substitui o yt-d
 ## Estrutura
 
 ```text
-include/ytdl/      Headers públicos da biblioteca (greeting.hpp)
+include/vidx/      Headers públicos da biblioteca (greeting.hpp)
 src/               Implementação da biblioteca (greeting.cpp) e CLI (main.cpp)
 CMakeLists.txt     Alvos, lista de fontes e ferramentas de qualidade
 Makefile           Atalhos para compilar, executar e verificar
@@ -49,7 +49,7 @@ CMakePresets.json  Presets Debug e Release
 .github/workflows/ Compilação e verificações no GitHub Actions
 ```
 
-O alvo `ytdl::core` é uma biblioteca estática independente de Tauri, Expo e Kotlin.
+O alvo `vidx::core` é uma biblioteca estática independente de Tauri, Expo e Kotlin.
 A CLI apenas consome essa biblioteca. As futuras pontes nativas serão adicionadas
 separadamente; este projeto ainda não inclui extratores, downloads ou integrações mobile.
 A biblioteca usa código independente de posição para permitir sua futura ligação
@@ -71,8 +71,8 @@ brew install cmake ninja llvm
 
 O CMake procura as ferramentas LLVM no PATH e nos caminhos usuais do Homebrew.
 Para outra instalação, defina `LLVM_ROOT` antes de configurar ou passe
-`-DYTDL_CLANG_FORMAT=/caminho/clang-format` e
-`-DYTDL_CLANG_TIDY=/caminho/clang-tidy` ao CMake.
+`-DVIDX_CLANG_FORMAT=/caminho/clang-format` e
+`-DVIDX_CLANG_TIDY=/caminho/clang-tidy` ao CMake.
 O CI utiliza LLVM 18 como referência para formatação e análise estática.
 
 ## Compilar e executar
@@ -97,7 +97,7 @@ make help         # Lista os atalhos
 O Makefile usa os mesmos presets CMake e configura o projeto automaticamente
 antes de compilar ou executar as ferramentas de qualidade. A compilação continua
 usando Ninja. É possível passar opções com
-`make build CMAKE_ARGS="-DYTDL_WARNINGS_AS_ERRORS=ON"` e argumentos para a CLI
+`make build CMAKE_ARGS="-DVIDX_WARNINGS_AS_ERRORS=ON"` e argumentos para a CLI
 com `make run ARGS="..."` (o Hello World ainda não interpreta argumentos).
 
 ### Comandos CMake diretos
@@ -107,11 +107,11 @@ Execute os comandos a partir da raiz do projeto:
 ```sh
 cmake --preset debug
 cmake --build --preset debug
-./build/debug/ytdl
+./build/debug/vidx
 ```
 
 No Windows, use um terminal de desenvolvimento do Visual Studio com Ninja
-disponível e execute `build/debug/ytdl.exe`.
+disponível e execute `build/debug/vidx.exe`.
 
 Para uma compilação otimizada:
 
@@ -120,8 +120,8 @@ cmake --preset release
 cmake --build --preset release
 ```
 
-Para compilar somente a biblioteca, configure com `-DYTDL_BUILD_CLI=OFF`.
-Para tratar avisos do compilador como erros, use `-DYTDL_WARNINGS_AS_ERRORS=ON`.
+Para compilar somente a biblioteca, configure com `-DVIDX_BUILD_CLI=OFF`.
+Para tratar avisos do compilador como erros, use `-DVIDX_WARNINGS_AS_ERRORS=ON`.
 
 ## Formatação e análise estática
 
@@ -135,14 +135,14 @@ cmake --build --preset lint          # Executa clang-tidy
 
 Esses alvos ficam disponíveis quando as respectivas ferramentas são encontradas.
 O build comum não exige LLVM instalado. Ao adicionar arquivos `.cpp` à biblioteca,
-registre-os em `YTDL_SOURCES` no `CMakeLists.txt` da raiz. Headers públicos entram
-em `YTDL_HEADERS`. Os linters reutilizam essas listas, sem cadastro duplicado.
+registre-os em `VIDX_SOURCES` no `CMakeLists.txt` da raiz. Headers públicos entram
+em `VIDX_HEADERS`. Os linters reutilizam essas listas, sem cadastro duplicado.
 Headers internos podem ficar junto da implementação em `src/`; registre-os em
-`YTDL_HEADERS` apenas se também quiser incluí-los na formatação, sem movê-los
+`VIDX_HEADERS` apenas se também quiser incluí-los na formatação, sem movê-los
 para `include/`.
 
 Por exemplo, uma implementação interna em `src/protocols/http.cpp` entra em
-`YTDL_SOURCES`. A pasta não precisa ter seu próprio `CMakeLists.txt`.
+`VIDX_SOURCES`. A pasta não precisa ter seu próprio `CMakeLists.txt`.
 
 O arquivo `build/debug/compile_commands.json` é gerado para ferramentas como
 clangd; `.clangd` já aponta para essa pasta. `.editorconfig` define as convenções

@@ -21,20 +21,20 @@ jobs:
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
       - name: Configure
-        run: cmake --preset release -DYTDL_WARNINGS_AS_ERRORS=ON
+        run: cmake --preset release -DVIDX_WARNINGS_AS_ERRORS=ON
       - name: Build
         run: cmake --build --preset release
       - name: Run Hello World (Unix)
         if: runner.os != 'Windows'
         shell: bash
         run: |
-          output="$(./build/release/ytdl)"
+          output="$(./build/release/vidx)"
           test "$output" = 'Hello, world!'
       - name: Run Hello World (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $output = & ./build/release/ytdl.exe
+          $output = & ./build/release/vidx.exe
           if ($LASTEXITCODE -ne 0 -or $output -ne 'Hello, world!') {
             throw 'Hello World verification failed'
           }
@@ -51,9 +51,9 @@ jobs:
           CXX: clang++-18
         run: >-
           cmake --preset debug
-          -DYTDL_WARNINGS_AS_ERRORS=ON
-          -DYTDL_CLANG_FORMAT=/usr/bin/clang-format-18
-          -DYTDL_CLANG_TIDY=/usr/bin/clang-tidy-18
+          -DVIDX_WARNINGS_AS_ERRORS=ON
+          -DVIDX_CLANG_FORMAT=/usr/bin/clang-format-18
+          -DVIDX_CLANG_TIDY=/usr/bin/clang-tidy-18
       - name: Check formatting
         run: cmake --build --preset format-check
       - name: Analyze sources
