@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 
+if(POLICY CMP0135)
+    cmake_policy(SET CMP0135 NEW)
+endif()
+
 project(vidx LANGUAGES CXX)
 
 # ==========================================
@@ -20,6 +24,15 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(CURL 7.62 REQUIRED)
 find_package(LibXml2 REQUIRED)
 
+include(FetchContent)
+
+FetchContent_Declare(
+    json
+    URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz
+)
+
+FetchContent_MakeAvailable(json)
+
 # ==========================================
 # Vidx Library
 # ==========================================
@@ -28,6 +41,7 @@ add_library(vidx_core STATIC
     src/url.cpp
     src/core/http/client.cpp
     src/core/extractor/html_title.cpp
+    src/core/extractor/video_info.cpp
 )
 
 add_library(vidx::core ALIAS vidx_core)
@@ -62,4 +76,5 @@ target_link_libraries(vidx PRIVATE
 target_link_libraries(vidx_core PRIVATE
     CURL::libcurl
     LibXml2::LibXml2
+    nlohmann_json::nlohmann_json
 )

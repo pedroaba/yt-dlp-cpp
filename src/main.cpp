@@ -1,4 +1,5 @@
 #include "vidx/core/extractor/html_title.hpp"
+#include "vidx/core/extractor/video_info.hpp"
 #include "vidx/core/http/client.hpp"
 #include "vidx/core/validator/url.hpp"
 
@@ -39,6 +40,20 @@ int main(int argc, char *argv[]) {
       std::cout << "Título: " << *title << '\n';
     } else {
       std::cout << "A página não possui um título disponível.\n";
+    }
+
+    const vidx::VideoInfoExtractor video_info_extractor;
+    const auto video = video_info_extractor.Extract(response.Body);
+
+    std::cout << "ID: " << video.Id << '\n';
+    std::cout << "Título: " << video.Title << '\n';
+    std::cout << "Canal: " << video.ChannelName << '\n';
+    std::cout << "ID do canal: " << video.ChannelId << '\n';
+
+    if (video.DurationSeconds) {
+      std::cout << "Duração: " << *video.DurationSeconds << " segundos\n";
+    } else {
+      std::cout << "Duração indisponível\n";
     }
   } catch (const std::exception &error) {
     std::cerr << "Falha na requisição: " << error.what() << '\n';
