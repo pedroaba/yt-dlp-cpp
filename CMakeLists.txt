@@ -25,6 +25,7 @@ find_package(CURL 7.62 REQUIRED)
 
 add_library(vidx_core STATIC
     src/url.cpp
+    src/core/http/client.cpp
 )
 
 add_library(vidx::core ALIAS vidx_core)
