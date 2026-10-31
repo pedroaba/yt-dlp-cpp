@@ -42,6 +42,7 @@ add_library(vidx_core STATIC
     src/core/http/client.cpp
     src/core/extractor/html_title.cpp
     src/core/extractor/video_info.cpp
+    src/core/selector/format.cpp
 )
 
 add_library(vidx::core ALIAS vidx_core)
